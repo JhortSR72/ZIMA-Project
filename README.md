@@ -1,86 +1,20 @@
 # ZIMA-Project
-ZIMA Blue project (Pre-Alpha)
+ZIMA project (Pre-Alpha)
 
-import time #minutes/hours that the ZIMA will be up and running
-import RPi.GPIO as GPIO #hardware modules
-import random #variable bytes generator #(data is still unrefer)
+ZIMA-Project is currenrly subject to changes, please treat the data and code as malicious and/or obsolete.
 
-#setup
-GPIO.setmode(GPIO.BCM)
+ZIMA-Project looks to solve an existing variable class problem within the society's comfort. First an issue needs to be created -found in this case-, and the most common and abundant example: workload. Many people likes to enjoy life's little things. just thinking about them makes our day better. One of them is having a pool and consequently use it. Many people who've had a pool for the first did not know how tedious it is to clean it properly.
 
-# Motor Pins (example)
-MOTOR_LEFT_PIN = 17
-MOTOR_RIGHT_PIN = 18
-TRIGGER_PIN = 23  #for ultrasonic sensor
-ECHO_PIN = 24     #for ultrasonic sensor
+A few, general examples are: Getting a water vacuum, chlorine tablets, pH measurements strips, etc. When people come to this realization, they feel baffled as just buying the necessary equipment for having their pool cleaned for just 2 weeks is nearly $6.000 USD a year; and if people decide to take matter in their own hands, we can have a clear notion that buying or renting the equipment is not an economical approach at all. WITH ZIMA-Project[name subject to change] we're looking to develop a solution to this enjoyment, so it can be a decisive, pleasant experince. How do we achieve this? By eliminating the user from the equation of cleaning. The boring, time-consuming algorithm passes to someone else, or in this case, something.
 
-#setup GPIO pins
-GPIO.setup(MOTOR_LEFT_PIN, GPIO.OUT)
-GPIO.setup(MOTOR_RIGHT_PIN, GPIO.OUT)
-GPIO.setup(TRIGGER_PIN, GPIO.OUT)
-GPIO.setup(ECHO_PIN, GPIO.IN)
+Current "water-roombas" are designed to get rid of disposals from large masses of water, eg. rivers, dams, oceans. Yet they have not been developed for personal use such as: "I have to clean my pool in 2 hours because I have party tonight, and I have to go buy the snacks, oh how wish there was a magical entity who would clean my pool for me". By developing this mechanism, new markets can be introduced and have them grow at the same rate that population does.
 
-#initialize motors
-left_motor = GPIO.PWM(MOTOR_LEFT_PIN, 100)  #100Hz PWM frequency
-right_motor = GPIO.PWM(MOTOR_RIGHT_PIN, 100)
-left_motor.start(0)
-right_motor.start(0)
+ZIMA is to be a small 70cm x 40cm x 20cm submergible boat that can be put on a pool, charged with chlorine tablets (use bromine for warm water), pH adjusters, algaecides, and calcium chloride, that will clean it for the user whenever they want it. It is known for professional pool cleansers that it's better to put the chlorine tablets directly into the filter than in the water, however, this is only done since some people may have a minor discomfort if there's too many chlorine (bleach) in the water. By that logic, ZIMA will be able to scan the depth and lentgh of the pool so that it can segregate the neccesary amount of chlorine. How so? The tablets will be located at the bottom of the ZIMA, much like a pool floating dispenser, ZIMA will have two compartments that will open as soon as the user indicates to begin its process, and will close after a ZIMA provides enough chlorine to the pool according to its meassurements, same with the other chemicals.
 
-#function to measure distance using ultrasonic sensor
-def get_distance():
-    GPIO.output(TRIGGER_PIN, GPIO.HIGH)
-    time.sleep(0.00001)
-    GPIO.output(TRIGGER_PIN, GPIO.LOW)
+[REDACTED] is to be a "companion" for ZIMA, it is to be smaller in size (measurements, build, and code are still being developed) which purpose is to make the pool clearer after ZIMA is done with the cleaning of it. [REDACTED] is also a small, submergible boat that is intended to be load with Clarifier (they work by removing small particles that are suspended in the water) or Flocculant (if the user wishes for a less chemical approach), and cyanuric acid (aka chloride sunscreen which helps the pool to stay cleaner for longer)
 
-    while GPIO.input(ECHO_PIN) == GPIO.LOW:
-        pulse_start = time.time()
+In conclussion, ZIMA is not only meant have the pool's content clean, but also the structure itself.
 
-    while GPIO.input(ECHO_PIN) == GPIO.HIGH:
-        pulse_end = time.time()
+END OF README.md
 
-    pulse_duration = pulse_end - pulse_start
-    distance = pulse_duration * 17150  #distance in cm
-    return distance
-
-# Movement Functions
-def move_forward():
-    left_motor.ChangeDutyCycle(50)  #50% speed
-    right_motor.ChangeDutyCycle(50)  #50% speed
-
-def stop():
-    left_motor.ChangeDutyCycle(0)
-    right_motor.ChangeDutyCycle(0)
-
-def turn_left():
-    left_motor.ChangeDutyCycle(0)
-    right_motor.ChangeDutyCycle(50)
-
-def turn_right():
-    left_motor.ChangeDutyCycle(50)
-    right_motor.ChangeDutyCycle(0)
-
-# Main Loop for autonomous cleaning
-def clean_pool():
-    while True:
-        distance = get_distance()
-        print(f"Distance: {distance} cm")
-
-        # Avoid obstacles
-        if distance < 30:  #if an obstacle is detected within 30 cm
-            stop()
-            time.sleep(1)
-            turn_left()
-            time.sleep(1)
-            move_forward()
-        else:
-            move_forward()
-
-        time.sleep(0.1)
-
-try:
-    clean_pool()
-except KeyboardInterrupt:
-    GPIO.cleanup()
-
-    #CODE SUBJECT TO CHANGE
 
